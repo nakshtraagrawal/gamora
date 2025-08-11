@@ -17,6 +17,12 @@
             min-height: 100vh;
             color: #fff;
             overflow-x: hidden;
+            transition: all 0.3s ease;
+        }
+
+        body.light {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            color: #2d3436;
         }
 
         .container {
@@ -37,6 +43,11 @@
             margin-bottom: 15px;
             letter-spacing: 8px;
             text-transform: uppercase;
+            transition: all 0.3s ease;
+        }
+
+        body.light .logo {
+            color: #2d3436;
         }
 
         .logo-accent {
@@ -52,6 +63,11 @@
             font-weight: 300;
             letter-spacing: 2px;
             text-transform: uppercase;
+            transition: all 0.3s ease;
+        }
+
+        body.light .tagline {
+            color: #636e72;
         }
 
         .games-container {
@@ -113,6 +129,11 @@
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         }
 
+        body.light .tic-tac-toe {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
         .tic-tac-toe::before {
             background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><g fill="none" stroke="white" stroke-width="8"><path d="M40 40h120M40 100h120M40 160h120M40 40v120M100 40v120M160 40v120"/><circle cx="70" cy="70" r="20"/><circle cx="130" cy="130" r="20"/><path d="M110 50l20 20M110 90l20-20M50 110l20 20M50 150l20-20"/></g></svg>');
         }
@@ -121,12 +142,26 @@
             background: linear-gradient(135deg, #ffeaa7 0%, #fab1a0 100%);
         }
 
+        body.light .rock-paper-scissor {
+            background: linear-gradient(135deg, #ffeaa7 0%, #fab1a0 100%);
+            color: #2d3436;
+        }
+
         .rock-paper-scissor::before {
             background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><g fill="white" opacity="0.3"><circle cx="50" cy="100" r="25"/><polygon points="100,50 130,90 100,130 70,90"/><path d="M150 70c10 0 20 10 20 20s-10 20-20 20-20-10-20-20l15-15z"/></g></svg>');
         }
 
+        body.light .rock-paper-scissor::before {
+            background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><g fill="black" opacity="0.2"><circle cx="50" cy="100" r="25"/><polygon points="100,50 130,90 100,130 70,90"/><path d="M150 70c10 0 20 10 20 20s-10 20-20 20-20-10-20-20l15-15z"/></g></svg>');
+        }
+
         .number-guesser {
             background: linear-gradient(135deg, #a29bfe 0%, #74b9ff 100%);
+        }
+
+        body.light .number-guesser {
+            background: linear-gradient(135deg, #a29bfe 0%, #74b9ff 100%);
+            color: white;
         }
 
         .number-guesser::before {
@@ -135,6 +170,11 @@
 
         .whack-a-mole {
             background: linear-gradient(135deg, #fd79a8 0%, #e84393 100%);
+        }
+
+        body.light .whack-a-mole {
+            background: linear-gradient(135deg, #fd79a8 0%, #e84393 100%);
+            color: white;
         }
 
         .whack-a-mole::before {
@@ -199,6 +239,12 @@
             background: rgba(255, 255, 255, 0.05);
             border-radius: 15px;
             backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+
+        body.light .stats-bar {
+            background: rgba(255, 255, 255, 0.8);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
         }
 
         .stat {
@@ -210,6 +256,11 @@
             font-weight: 700;
             color: #4ecdc4;
             display: block;
+            transition: all 0.3s ease;
+        }
+
+        body.light .stat-number {
+            color: #667eea;
         }
 
         .stat-label {
@@ -217,6 +268,11 @@
             color: #a0a0a0;
             text-transform: uppercase;
             letter-spacing: 1px;
+            transition: all 0.3s ease;
+        }
+
+        body.light .stat-label {
+            color: #636e72;
         }
 
         @media (max-width: 768px) {
@@ -264,6 +320,8 @@
 </head>
 <body>
     <div class="container">
+        <button onclick="toggleTheme()" style="position: absolute; top: 20px; right: 20px; background: white; color: black; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer;">Toggle Theme</button>
+        
         <header>
             <h1 class="logo">GA<span class="logo-accent">MO</span>RA</h1>
             <p class="tagline">Premium Gaming Experience</p>
@@ -355,23 +413,9 @@
             });
         });
 
-        // Add subtle parallax effect to background patterns
-        document.addEventListener('mousemove', (e) => {
-            const tiles = document.querySelectorAll('.game-tile');
-            const mouseX = e.clientX / window.innerWidth;
-            const mouseY = e.clientY / window.innerHeight;
-            
-            tiles.forEach((tile, index) => {
-                const xOffset = (mouseX - 0.5) * 10 * (index % 2 === 0 ? 1 : -1);
-                const yOffset = (mouseY - 0.5) * 10 * (Math.floor(index / 2) === 0 ? 1 : -1);
-                
-                const before = tile.querySelector('::before');
-                if (before) {
-                    tile.style.setProperty('--mouse-x', `${xOffset}px`);
-                    tile.style.setProperty('--mouse-y', `${yOffset}px`);
-                }
-            });
-        });
+        function toggleTheme() {
+            document.body.classList.toggle('light');
+        }
     </script>
 </body>
 </html>
