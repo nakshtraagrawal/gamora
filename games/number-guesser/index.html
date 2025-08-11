@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Number Guesser</title>
+    <!-- Use a modern, easy-to-read font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Define a color palette with CSS variables for easy theming */
+        :root {
+            --bg-color: #f0f4f8;
+            --text-color: #334e68;
+            --nav-bg: #8ac0e2;
+            --nav-link-color: #334e68;
+            --nav-link-hover: #102a43;
+            --card-bg: #ffffff;
+            --card-border: #d9e2ec;
+            --button-bg: #325d88;
+            --button-hover-bg: #2a4e6f;
+            --input-border: #bcccdc;
+            --active-page-link: #ffffff;
+            --error-color: #d9534f;
+            --ok-color: #4CAF50;
+        }
+
+        body.dark {
+            --bg-color: #1a202c;
+            --text-color: #e2e8f0;
+            --nav-bg: #2d3748;
+            --nav-link-color: #e2e8f0;
+            --nav-link-hover: #a0aec0;
+            --card-bg: #2d3748;
+            --card-border: #4a5568;
+            --button-bg: #4a5568;
+            --button-hover-bg: #2d3748;
+            --input-border: #4a5568;
+            --active-page-link: #a0aec0;
+            --error-color: #f56565;
+            --ok-color: #68d391;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        nav {
+            background: var(--nav-bg);
+            padding: 15px 20px;
+            border-radius: 10px;
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        nav a {
+            margin-right: 25px;
+            text-decoration: none;
+            color: var(--nav-link-color);
+            padding: 8px 12px;
+            border-radius: 8px;
+            transition: background-color 0.2s, color 0.2s;
+            font-weight: 600;
+        }
+        nav a:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+            color: var(--nav-link-hover);
+        }
+        nav a.active {
+            background-color: var(--button-bg);
+            color: var(--active-page-link);
+        }
+
+        .page {
+            display: none;
+            background-color: var(--card-bg);
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .page.active {
+            display: block;
+        }
+        h1, h2 {
+            color: var(--button-bg);
+            margin-top: 0;
+        }
+        
+        #cards {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-top: 20px;
+        }
+        .box {
+            border: 1px solid var(--card-border);
+            border-radius: 10px;
+            padding: 20px;
+            flex: 1 1 200px; /* Allow cards to wrap on smaller screens */
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+        }
+        .box:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        button {
+            padding: 12px 20px;
+            margin: 5px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            background-color: var(--button-bg);
+            color: var(--active-page-link);
+            font-weight: bold;
+            transition: background-color 0.2s, transform 0.1s;
+        }
+        button:hover {
+            background-color: var(--button-hover-bg);
+            transform: translateY(-2px);
+        }
+        button:active {
+            transform: translateY(0);
+        }
+
+        input, textarea {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 12px;
+            margin: 8px 0;
+            border: 1px solid var(--input-border);
+            border-radius: 8px;
+            background-color: var(--card-bg);
+            color: var(--text-color);
+            font-family: 'Inter', sans-serif;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+        input:focus, textarea:focus {
+            outline: none;
+            border-color: var(--button-bg);
+            box-shadow: 0 0 0 3px rgba(50, 93, 136, 0.2);
+        }
+
+        .error {
+            color: var(--error-color);
+            margin-bottom: 5px;
+            font-size: 0.9em;
+        }
+        #ok {
+            color: var(--ok-color);
+            font-weight: bold;
+        }
+
+        /* Dark mode toggle button styling */
+        nav button {
+            margin-left: auto; /* Push to the right */
+            background-color: var(--nav-link-color);
+            color: var(--nav-bg);
+            border: none;
+            padding: 8px 12px;
+            font-size: 1rem;
+            font-weight: bold;
+            border-radius: 8px;
+        }
+        nav button:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+            color: var(--nav-link-color);
+        }
+        body.dark nav button {
+            background-color: var(--nav-link-color);
+            color: var(--nav-bg);
+        }
+
+        @media (max-width: 600px) {
+            nav {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            nav a {
+                margin: 5px 0;
+                width: 100%;
+            }
+            nav button {
+                margin-top: 10px;
+                margin-left: 0;
+            }
+            #cards {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <a href="#" onclick="show('home', event)" class="active">Home</a>
+        <a href="#" onclick="show('game', event)">Game</a>
+        <a href="#" onclick="show('contact', event)">Contact</a>
+        <button onclick="toggle()">Dark</button>
+    </nav>
+
+    <div id="home" class="page active">
+        <h1>Number Guessing Game</h1>
+        <p>Guess the number between 1 and 10!</p>
+        <div id="cards"></div>
+    </div>
+
+    <div id="game" class="page">
+        <h2>Guess the Number</h2>
+        <p>I'm thinking of a number between 1 and 10</p>
+        <input type="number" id="guess" min="1" max="10">
+        <button onclick="check()">Guess</button>
+        <button onclick="reset()">New Game</button>
+        <p id="result"></p>
+        <p>Tries: <span id="tries">0</span></p>
+    </div>
+
+    <div id="contact" class="page">
+        <h2>Contact</h2>
+        <div>Name: <input type="text" id="name"></div>
+        <div class="error" id="nameErr"></div>
+        <div>Email: <input type="text" id="email"></div>
+        <div class="error" id="emailErr"></div>
+        <div>Message: <textarea id="msg"></textarea></div>
+        <div class="error" id="msgErr"></div>
+        <button onclick="send()">Send</button>
+        <div id="ok"></div>
+    </div>
+
+    <script>
+        let secret = Math.floor(Math.random() * 10) + 1;
+        let tryCount = 0;
+
+        let features = [
+            {name: 'Easy Game', info: 'Simple number guessing'},
+            {name: 'Mobile Works', info: 'Works on phone too'},
+            {name: 'Dark Mode', info: 'Switch themes'}
+        ];
+
+        function show(pageId, event) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.getElementById(pageId).classList.add('active');
+            
+            document.querySelectorAll('nav a').forEach(a => a.classList.remove('active'));
+            event.target.classList.add('active');
+        }
+
+        function toggle() {
+            document.body.classList.toggle('dark');
+        }
+
+        function makeCards() {
+            let div = document.getElementById('cards');
+            div.innerHTML = ''; // Clear previous content
+            features.forEach(f => {
+                div.innerHTML += '<div class="box"><h3>' + f.name + '</h3><p>' + f.info + '</p></div>';
+            });
+        }
+
+        function check() {
+            let guess = document.getElementById('guess').value;
+            let resultElement = document.getElementById('result');
+            
+            // Check for empty input
+            if (guess === '') {
+                resultElement.textContent = 'Please enter a number.';
+                return;
+            }
+
+            tryCount++;
+            document.getElementById('tries').textContent = tryCount;
+            
+            if (guess == secret) {
+                resultElement.textContent = 'Correct! You won!';
+                resultElement.style.color = 'var(--ok-color)';
+            } else if (guess < secret) {
+                resultElement.textContent = 'Too low!';
+                resultElement.style.color = 'var(--text-color)';
+            } else {
+                resultElement.textContent = 'Too high!';
+                resultElement.style.color = 'var(--text-color)';
+            }
+        }
+
+        function reset() {
+            secret = Math.floor(Math.random() * 10) + 1;
+            tryCount = 0;
+            document.getElementById('tries').textContent = '0';
+            document.getElementById('result').textContent = '';
+            document.getElementById('guess').value = '';
+        }
+
+        function send() {
+            let name = document.getElementById('name').value;
+            let email = document.getElementById('email').value;
+            let msg = document.getElementById('msg').value;
+            
+            document.getElementById('nameErr').textContent = '';
+            document.getElementById('emailErr').textContent = '';
+            document.getElementById('msgErr').textContent = '';
+            
+            let ok = true;
+            
+            if (!name) {
+                document.getElementById('nameErr').textContent = 'Need name';
+                ok = false;
+            }
+            
+            if (!email) {
+                document.getElementById('emailErr').textContent = 'Need email';
+                ok = false;
+            }
+            
+            if (!msg) {
+                document.getElementById('msgErr').textContent = 'Need message';
+                ok = false;
+            }
+            
+            if (ok) {
+                document.getElementById('ok').textContent = 'Sent!';
+            }
+        }
+
+        makeCards();
+    </script>
+</body>
+</html>

@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gamora - Premium Gaming Hub</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #0f0f23;
+            min-height: 100vh;
+            color: #fff;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .logo {
+            font-size: 3.8rem;
+            font-weight: 300;
+            color: #fff;
+            margin-bottom: 15px;
+            letter-spacing: 8px;
+            text-transform: uppercase;
+        }
+
+        .logo-accent {
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1, #96ceb4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .tagline {
+            font-size: 1.1rem;
+            color: #a0a0a0;
+            font-weight: 300;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .games-container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .games-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: 1fr 1fr;
+            gap: 4px;
+            width: 100%;
+            height: 600px;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.5);
+        }
+
+        .game-tile {
+            position: relative;
+            cursor: pointer;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 40px 30px;
+        }
+
+        .game-tile::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            opacity: 0.15;
+            transition: opacity 0.4s ease;
+        }
+
+        .game-tile:hover::before {
+            opacity: 0.25;
+        }
+
+        .game-tile:hover {
+            transform: scale(1.02);
+            z-index: 10;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+        }
+
+        /* Individual game backgrounds and colors */
+        .tic-tac-toe {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .tic-tac-toe::before {
+            background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><g fill="none" stroke="white" stroke-width="8"><path d="M40 40h120M40 100h120M40 160h120M40 40v120M100 40v120M160 40v120"/><circle cx="70" cy="70" r="20"/><circle cx="130" cy="130" r="20"/><path d="M110 50l20 20M110 90l20-20M50 110l20 20M50 150l20-20"/></g></svg>');
+        }
+
+        .rock-paper-scissor {
+            background: linear-gradient(135deg, #ffeaa7 0%, #fab1a0 100%);
+        }
+
+        .rock-paper-scissor::before {
+            background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><g fill="white" opacity="0.3"><circle cx="50" cy="100" r="25"/><polygon points="100,50 130,90 100,130 70,90"/><path d="M150 70c10 0 20 10 20 20s-10 20-20 20-20-10-20-20l15-15z"/></g></svg>');
+        }
+
+        .number-guesser {
+            background: linear-gradient(135deg, #a29bfe 0%, #74b9ff 100%);
+        }
+
+        .number-guesser::before {
+            background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><g fill="white" opacity="0.3"><text x="30" y="80" font-size="40" font-family="Arial">1</text><text x="80" y="80" font-size="40" font-family="Arial">2</text><text x="130" y="80" font-size="40" font-family="Arial">3</text><text x="30" y="130" font-size="40" font-family="Arial">4</text><text x="80" y="130" font-size="40" font-family="Arial">?</text><text x="130" y="130" font-size="40" font-family="Arial">6</text></g></svg>');
+        }
+
+        .whack-a-mole {
+            background: linear-gradient(135deg, #fd79a8 0%, #e84393 100%);
+        }
+
+        .whack-a-mole::before {
+            background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><g fill="white" opacity="0.3"><circle cx="50" cy="60" r="8"/><circle cx="100" cy="80" r="8"/><circle cx="150" cy="60" r="8"/><circle cx="70" cy="120" r="8"/><circle cx="130" cy="140" r="8"/><rect x="45" y="45" width="10" height="30" rx="5"/><rect x="95" y="65" width="10" height="30" rx="5"/><rect x="145" y="45" width="10" height="30" rx="5"/></g></svg>');
+        }
+
+        .game-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .game-icon {
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+            filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.3));
+        }
+
+        .game-title {
+            font-size: 1.8rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .game-description {
+            font-size: 0.95rem;
+            opacity: 0.9;
+            line-height: 1.4;
+            margin-bottom: 25px;
+            max-width: 250px;
+        }
+
+        .play-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            padding: 12px 28px;
+            border-radius: 30px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            backdrop-filter: blur(10px);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .play-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            border-color: rgba(255, 255, 255, 0.5);
+            transform: translateY(-2px);
+        }
+
+        .stats-bar {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            margin-top: 50px;
+            padding: 30px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+        }
+
+        .stat {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #4ecdc4;
+            display: block;
+        }
+
+        .stat-label {
+            font-size: 0.85rem;
+            color: #a0a0a0;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        @media (max-width: 768px) {
+            .games-grid {
+                height: 500px;
+                gap: 2px;
+            }
+            
+            .game-tile {
+                padding: 20px 15px;
+            }
+            
+            .game-icon {
+                font-size: 2.5rem;
+            }
+            
+            .game-title {
+                font-size: 1.3rem;
+            }
+            
+            .game-description {
+                font-size: 0.85rem;
+                margin-bottom: 15px;
+            }
+            
+            .logo {
+                font-size: 2.5rem;
+                letter-spacing: 4px;
+            }
+            
+            .stats-bar {
+                flex-direction: column;
+                gap: 20px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .games-grid {
+                grid-template-columns: 1fr;
+                grid-template-rows: repeat(4, 1fr);
+                height: 800px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1 class="logo">GA<span class="logo-accent">MO</span>RA</h1>
+            <p class="tagline">Premium Gaming Experience</p>
+        </header>
+
+        <div class="games-container">
+            <div class="games-grid">
+                <div class="game-tile tic-tac-toe" onclick="navigateToGame('./games/tic-tac-toe/index.html')">
+                    <div class="game-content">
+                        <div class="game-icon">⚡</div>
+                        <h2 class="game-title">Tic Tac Toe</h2>
+                        <p class="game-description">Strategic thinking meets classic gameplay in this timeless battle of wits</p>
+                        <a href="./games/tic-tac-toe/index.html" class="play-btn">Play Now</a>
+                    </div>
+                </div>
+
+                <div class="game-tile rock-paper-scissor" onclick="navigateToGame('./games/rock-paper-scissors/index.html')">
+                    <div class="game-content">
+                        <div class="game-icon">🎯</div>
+                        <h2 class="game-title">Rock Paper Scissors</h2>
+                        <p class="game-description">Test your intuition and psychology against an intelligent opponent</p>
+                        <a href="./games/rock-paper-scissors/index.html" class="play-btn">Play Now</a>
+                    </div>
+                </div>
+
+                <div class="game-tile number-guesser" onclick="navigateToGame('./games/number-guesser/index.html')">
+                    <div class="game-content">
+                        <div class="game-icon">🧠</div>
+                        <h2 class="game-title">Number Guesser</h2>
+                        <p class="game-description">Challenge your logical reasoning with this mind-bending puzzle game</p>
+                        <a href="./games/number-guesser/index.html" class="play-btn">Play Now</a>
+                    </div>
+                </div>
+
+                <div class="game-tile whack-a-mole" onclick="navigateToGame('./games/whack-a-mole/index.html')">
+                    <div class="game-content">
+                        <div class="game-icon">⚡</div>
+                        <h2 class="game-title">Whack-A-Mole</h2>
+                        <p class="game-description">Lightning-fast reflexes required for this high-energy arcade classic</p>
+                        <a href="./games/whack-a-mole/index.html" class="play-btn">Play Now</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="stats-bar">
+            <div class="stat">
+                <span class="stat-number">4</span>
+                <span class="stat-label">Games Available</span>
+            </div>
+            <div class="stat">
+                <span class="stat-number">∞</span>
+                <span class="stat-label">Hours of Fun</span>
+            </div>
+            <div class="stat">
+                <span class="stat-number">100%</span>
+                <span class="stat-label">Free to Play</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function navigateToGame(gameUrl) {
+            // Add click animation
+            const clickedTile = event.currentTarget;
+            clickedTile.style.transform = 'scale(0.98)';
+            
+            setTimeout(() => {
+                clickedTile.style.transform = 'scale(1.02)';
+                // Navigate to the actual game
+                window.location.href = gameUrl;
+            }, 150);
+        }
+
+        // Prevent event bubbling on play buttons
+        document.querySelectorAll('.play-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                e.preventDefault();
+                
+                const gameUrl = btn.getAttribute('href');
+                btn.style.transform = 'translateY(-1px) scale(0.98)';
+                
+                setTimeout(() => {
+                    btn.style.transform = 'translateY(-2px) scale(1)';
+                    // Navigate to the actual game
+                    window.location.href = gameUrl;
+                }, 100);
+            });
+        });
+
+        // Add subtle parallax effect to background patterns
+        document.addEventListener('mousemove', (e) => {
+            const tiles = document.querySelectorAll('.game-tile');
+            const mouseX = e.clientX / window.innerWidth;
+            const mouseY = e.clientY / window.innerHeight;
+            
+            tiles.forEach((tile, index) => {
+                const xOffset = (mouseX - 0.5) * 10 * (index % 2 === 0 ? 1 : -1);
+                const yOffset = (mouseY - 0.5) * 10 * (Math.floor(index / 2) === 0 ? 1 : -1);
+                
+                const before = tile.querySelector('::before');
+                if (before) {
+                    tile.style.setProperty('--mouse-x', `${xOffset}px`);
+                    tile.style.setProperty('--mouse-y', `${yOffset}px`);
+                }
+            });
+        });
+    </script>
+</body>
+</html>
