@@ -2,7 +2,6 @@
 <html>
 <head>
     <title>Number Guesser</title>
-    <!-- Use a modern, easy-to-read font -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
@@ -307,16 +306,23 @@
             document.getElementById('nameErr').textContent = '';
             document.getElementById('emailErr').textContent = '';
             document.getElementById('msgErr').textContent = '';
+            document.getElementById('ok').textContent = ''; // Clear previous "Sent!" message
             
             let ok = true;
             
             if (!name) {
                 document.getElementById('nameErr').textContent = 'Need name';
                 ok = false;
+            } else if (/\d/.test(name)) { // Check if name contains any digit
+                document.getElementById('nameErr').textContent = 'Name cannot contain numbers';
+                ok = false;
             }
             
             if (!email) {
                 document.getElementById('emailErr').textContent = 'Need email';
+                ok = false;
+            } else if (!email.includes('@')) { // Check for '@' symbol
+                document.getElementById('emailErr').textContent = 'Please enter a valid email (missing @)';
                 ok = false;
             }
             
